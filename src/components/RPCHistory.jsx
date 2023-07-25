@@ -27,7 +27,7 @@ useQuery({
 	enabled: !!employeeId
 })
 
-export function RPCHistory({employeeId}) 
+export function RPCHistory({employeeId, mini}) 
 {
 
 	const { status, data: rpcStatuses, error, isFetching, isLoading } = useGetRPCStatuses(employeeId)
@@ -74,34 +74,39 @@ export function RPCHistory({employeeId})
                     </tr>
                 </thead>
                 <tbody>
-                	{ rpcStatuses && rpcStatuses.Items.map(item => (
-                		<tr 
-                            className="odd:bg-white even:bg-slate-100" 
-                            key={item.id}
-                            >
-                			<td className="p-3 text-gray-800 text-sm">
-                            <a href="/rpc/{item.id}" className="hover:text-blue-900">
-                                <strong className="text-semibold">{item.categoryTitle}</strong>:<br />{item.title}
-                            </a>
-                            </td>
-                			<td className="w-[60%]">
-                                <ApprovalTimeline 
-                                    approvalFlow={rpcStatuses.ApprovalFlow} 
-                                    rpcStatus={item.approvals} 
-                                    rpcInfo={item}
-                                    isExpanded={rowStatus?.find(x => x.rowId == item.id)?.expanded} />
-                            </td>
-                			<td className="text-gray-800 text-sm">Status: <strong className="text-semibold">{item.status}</strong><br />
-                			<small className="text-xs text-gray-700">{item.updated}</small></td>
-                            <td className="text-end p-2">
-                                {(rowStatus?.length > 0) && (
-                                    <button type="button" onClick={() => toggleRow(item.id)} className="text-3xl">
-                                        { rowStatus.find(x => x.rowId == item.id).expanded == true ? (<MdExpandLess />) : (<MdExpandMore />) }
-                                    </button>                                    
-                                )}
-                            </td>
-                		</tr>
-                	))}
+                	{ rpcStatuses && 
+                        rpcStatuses.Items.length > 0 ? 
+                            rpcStatuses.Items.map(item => (
+                        		<tr 
+                                    className="odd:bg-white even:bg-slate-100" 
+                                    key={item.id}
+                                    >
+                        			<td className="p-3 text-gray-800 text-sm">
+                                    <a href={'/rpc/'+item.id} className="hover:text-blue-900">
+                                        <strong className="text-semibold">{item.categoryTitle}</strong>:<br />{item.title}
+                                    </a>
+                                    </td>
+                        			<td className="w-[60%]">
+                                        <ApprovalTimeline 
+                                            approvalFlow={rpcStatuses.ApprovalFlow} 
+                                            rpcStatus={item.approvals} 
+                                            rpcInfo={item}
+                                            mini={mini}
+                                            isExpanded={rowStatus?.find(x => x.rowId == item.id)?.expanded} />
+                                    </td>
+                        			<td className="text-gray-800 text-sm">Status: <strong className="text-semibold">{item.status}</strong><br />
+                        			<small className="text-xs text-gray-700">{item.updated}</small></td>
+                                    {!mini ? (<td className="text-end p-2">
+                                        {(rowStatus?.length > 0) && (
+                                            <button type="button" onClick={() => toggleRow(item.id)} className="text-3xl">
+                                                { rowStatus.find(x => x.rowId == item.id).expanded == true ? (<MdExpandLess />) : (<MdExpandMore />) }
+                                            </button>                                    
+                                        )}
+                                    </td>
+                                    ) : (<td></td>) }
+                        		</tr>
+                            ))
+                         : (<tr><td colSpan="4" className="p-3">There are no RPCs associated with this employee.</td></tr>) }
                 </tbody>
             </table>
 		</div>

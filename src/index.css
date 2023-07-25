@@ -2,11 +2,186 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base
-{
-  body
-  {
-    @apply bg-stone-200;
-  }
+.material-symbols-rounded {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+}
+.material-symbols-rounded {
+    vertical-align: middle;
+    padding-bottom: 5px;
+    margin-right: 3px;
+}
+.btn.sm .material-symbols-rounded {
+    font-size: 20px;
+}
+aside .material-symbols-rounded {
+    margin-right: inherit;
+    font-size: 24px;
+    padding-bottom: 0;
+}
+.icon .material-symbols-rounded, .icon-only .material-symbols-rounded  {
+    vertical-align: middle;
+    margin-right: 0;
+    font-size: 20px;
+}
+@layer base {
+    h1 {
+        @apply text-5xl;
+    }
+    h2 {
+        @apply text-4xl;
+    }
+    h3 {
+        @apply text-3xl mt-5;
+    }
+    h4 {
+        @apply text-2xl;
+    }
+    h5 {
+        @apply text-xl;
+    }
+    h6 {
+        @apply text-lg;
+    }
 }
 
+@layer components {
+    .content {
+        @apply bg-white rounded-lg p-6 shadow;
+    }
+
+    .table {
+        @apply w-full text-left text-gray-600 dark:text-gray-400;
+    }
+
+        .table thead {
+            @apply border-b border-gray-200;
+        }
+
+            .table thead tr, .table thead th {
+                @apply bg-blue-300 text-gray-800 font-normal text-lg font-medium;
+            }
+
+            .table thead th:first-child {
+                @apply rounded-tl-lg;
+            }
+            .table thead th:last-child {
+                @apply rounded-tr-lg;
+            }
+
+        .table th, .table td {
+            @apply px-6 py-3;
+        }
+
+        .table tbody tr {
+            @apply odd:bg-white odd:dark:bg-gray-900 even:bg-gray-200 even:dark:bg-gray-950;
+        }
+
+    .btn {
+        @apply px-3 py-2 font-medium focus:ring-2 hover:cursor-pointer;
+    }
+
+    .form-control, .form-select {
+        @apply bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+    }
+
+    .form-check-input {
+        @apply border border-gray-300;
+    }
+
+    .form-label, .form-check-label {
+        @apply block mb-2 text-sm font-medium text-gray-900 dark:text-white;
+    }
+
+    .loggedout h1 {
+        @apply text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-4xl dark:text-white;
+    }
+
+    .loggedout h2 {
+        @apply text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white;
+    }
+
+    .btn.icon-only {
+        @apply focus:ring-4 focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2;
+    }
+    .btn.outline {
+        @apply px-3 py-2 font-medium rounded;
+    }
+    .btn.danger {
+        @apply text-white bg-red-500 rounded hover:bg-red-700 focus:ring-red-300;
+    }
+    .btn.primary, .btn.edit {
+        @apply text-white bg-blue-500 rounded hover:bg-blue-700 focus:ring-blue-300;
+    }
+    .btn.success, .btn.safe {
+        @apply text-white bg-green-500 rounded hover:bg-green-700 focus:ring-green-300;
+    }
+    .btn.warning, .btn.alt {
+        @apply text-white bg-amber-500 rounded hover:bg-amber-600 focus:ring-amber-400;
+    }
+    .btn.sm
+    {
+        @apply text-xs whitespace-nowrap;
+    }
+    .btn.sm.icon-only, .btn.sm.icon 
+    {
+        @apply px-1.5 mr-0;
+    }
+    header .btn-primary
+    {
+        @apply p-3 text-white bg-blue-500 rounded hover:bg-blue-700 focus:ring-blue-400 shadow;
+    }
+
+
+    .loggedout .btn {
+        @apply text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800;
+    }
+}
+
+
+.hideSpinner {
+    -moz-appearance: textfield;
+}
+
+    .hideSpinner::-webkit-inner-spin-button,
+    .hideSpinner::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+    }
+
+.ProseMirror {
+    position: static !important
+}
+
+.narrowScrollbar {
+    scrollbar-width: thin;
+}
+
+    .narrowScrollbar::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .narrowScrollbar::-webkit-scrollbar-track {
+        background: white;
+    }
+
+    .narrowScrollbar::-webkit-scrollbar-thumb {
+        background-color: auto;
+        border-radius: 100%;
+    }
+
+
+
+@layer base {
+    body {
+        @apply bg-stone-200;
+    }
+
+    input, textarea, select {
+        @apply read-only:bg-gray-50 read-only:text-gray-500;
+    }
+}
+
+@layer components {
+    .has-error input, .has-error textarea, .has-error select, .react-select-error {
+        @apply bg-red-50;
+    }
+}

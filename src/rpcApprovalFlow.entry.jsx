@@ -4,22 +4,19 @@ import './index.css'
 import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { useForm } from 'react-hook-form'
-import { RPCHistory } from './components/RPCHistory'
+import { ApprovalFlowEditor } from './components/ApprovalFlowEditor'
 import axios from 'axios'
 
 axios.defaults.baseURL = 'https://localhost:7080'
 
-const actionEditor = document.getElementById('rpcHistory');
-const dataMap = {
-  employeeId: actionEditor.dataset.employeeId
-}
+const rpcHistory = document.querySelector('#approvalFlow');
 
 const queryClient = new QueryClient({})
 
-ReactDOM.createRoot(actionEditor).render(
+approvalFlow && ReactDOM.createRoot(rpcHistory).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient} contextSharing={true}>
-      <RPCHistory {...dataMap} />
+      <ApprovalFlowEditor />
     <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </React.StrictMode>

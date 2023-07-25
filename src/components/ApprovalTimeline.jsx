@@ -6,7 +6,7 @@ import capitalize from 'lodash/capitalize'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip'
 
-export const ApprovalTimeline = ({approvalFlow, rpcStatus, rpcInfo, isExpanded}) => {
+export const ApprovalTimeline = ({approvalFlow, rpcStatus, rpcInfo, isExpanded, mini}) => {
 	
 	const [approvalEvents, setApprovalEvents] = useState([])
 
