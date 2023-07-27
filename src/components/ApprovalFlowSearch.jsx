@@ -28,9 +28,9 @@ useQuery({
 
 export function ApprovalFlowSearch(props) {
 
-	const [searchTerm, setSearchTerm] = useState('sa')
+	const [searchTerm, setSearchTerm] = useState('')
 	const [resultsList, setResultsList] = useState([])
-	const { status, data: searchResults, error, isFetching, isLoading } = useSearchEmployees(searchTerm)
+	const { status, data: searchResults, error, isFetching, isLoading, isSuccess } = useSearchEmployees(searchTerm)
 
 	const changeHandler = (e) => {
 		setSearchTerm(e.target.value) 
@@ -47,28 +47,39 @@ export function ApprovalFlowSearch(props) {
 		() => debounce(changeHandler, 300)
 	, []);
 
-	const usedIds = props.items.map(x => (x.id));
+	const doSearch = () => {
+		setSearchTerm(searchTerm)
+	}
 
+	const usedIds = props.items.map(x => (x.id, x.userId));
 
 	return (
 		<>
-			<form>
+			<form onSubmit={e => {
+				e.preventDefault()
+				doSearch()
+			}}>
 				<div className="flex flex-col gap-3 mb-5">
 					<label className="form-label">Search Employees</label>
-					<input type="text" value={searchTerm} className="form-control" onChange={e => setSearchTerm(e.target.value)} placeholder="First or Last Name"/>
+					<input type="text" name="search" value={searchTerm} className="form-control" onChange={e => setSearchTerm(e.target.value)} placeholder="First or Last Name"/>
 				</div>
 				<div className="text-right">
-					<button type="button" className="btn primary">Search</button>
+					<button type="button" className="btn primary" onClick={doSearch}>Search</button>
 				</div>
 			</form>
-
-			<div className="border mt-5 rounded">
 			
-				{isLoading && ( <div className="p-3"><p>Loading...</p></div>) }
-			{(resultsList && typeof(resultsList) != undefined) && (
+			{(resultsList && typeof(resultsList) != undefined && resultsList.length > 0 )&& (
+			<div className="border mt-5 rounded">
+				
 				<ul className="divide-y">
 					<li className="p-3 font-semibold text-xl bg-gray-200">Search Results</li>
-					{resultsList.filter(x => !usedIds.includes(x.id)).map(item => (
+
+					{(isLoading || isFetching) && ( <li className="p-3">Loading...</li> )}
+					{error && ( <li className="p-3">There was a problem fetching your search results.  Please try again later.</li>)}
+					{(isSuccess && resultsList.filter(x => !usedIds.includes(x.id)).length == 0) ? 
+						( <li className="p-3">There are no employees that match your search request.</li> ) : 
+
+					resultsList.filter(x => !usedIds.includes(x.id)).map(item => (
 						<li key={item.id} className="flex flex-row justify-between items-center p-3">
 							<div className="flex flex-col gap-3">
 								<strong>{item?.fullName}</strong>
@@ -93,8 +104,9 @@ export function ApprovalFlowSearch(props) {
 						</li>
 					))}
 				</ul>
-			)}
+			
 			</div>
+			)}
 
 
 		</>

@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form'
 import { RPCHistory } from './components/RPCHistory'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'https://localhost:7080'
+axios.defaults.baseURL = ''
 
 const rpcHistory = document.getElementById('rpcHistory');
 

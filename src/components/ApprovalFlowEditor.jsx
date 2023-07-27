@@ -6,7 +6,7 @@ import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSo
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import {SortableItem} from './SortableItem'
 import {RxDragHandleDots1} from 'react-icons/rx'
-import {MdOutlineDragHandle, MdLock, MdOutlineDeleteForever, MdOutlineHelp} from 'react-icons/md'
+import {MdOutlineDragHandle, MdLock, MdOutlineDeleteForever, MdOutlineHelp, MdError, MdCheckCircle} from 'react-icons/md'
 import {ApprovalFlowSearch} from './ApprovalFlowSearch'
 import { MouseSensor, KeyboardSensor } from './ApprovalFlowOverrideSensor'
 
@@ -54,10 +54,14 @@ export function ApprovalFlowEditor()
 
 	const [activeId, setActiveId] = useState(null)
 	const [items, setItems] = useState([])
-	const [showHelp, setShowHelp] = useState(true)
+	const [showHelp, setShowHelp] = useState(false)
 	const activeIndex = activeId ? getIndex(activeId) : -1;
 	const { status, data: approvalFlowItems, error, isFetching, isLoading } = useGetApprovalFlow()
 	const createApprovalFlowMutation = useEditApprovalFlowMutation();
+	const [statusMessage, setStatusMessage] = useState({
+		type: '',
+		message: ""
+	})
 	
 	const sensors = useSensors(
 		useSensor(MouseSensor),
@@ -93,6 +97,10 @@ export function ApprovalFlowEditor()
 
 		
 		createApprovalFlowMutation.mutate(dataLoad)
+		setStatusMessage({
+			type: 'success',
+			message: "Changes to approval queue have been saved."
+		})
 	}
 	
 
@@ -117,6 +125,12 @@ export function ApprovalFlowEditor()
 				<p>Click the "Save Changes" after you have modified the RPC approval queue.</p>
 				</div>)}
 			</div>
+
+			{statusMessage && (
+				(statusMessage.type == 'success') ? 
+				( <div className="flex flex-row gap-2 items-center bg-green-200 text-green-900 m-3 p-3"><MdCheckCircle className="text-xl pb-0" /> <span>{statusMessage.message}</span></div> ) : (statusMessage.type == 'error') ?
+				( <div className="flex flex-row gap-2 items-center bg-red-200 text-red-900 m-3 p-3"><MdError className="text-xl pb-0" /> <span>{statusMessage.message}</span></div> ) : ('')
+			)}
 			<div className="border shadow">
 				<div className="flex flex-row items-center p-5 gap-5 border bg-gray-100">
 					<div>

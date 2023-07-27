@@ -7,13 +7,13 @@ import { useForm } from 'react-hook-form'
 import { ApprovalFlowEditor } from './components/ApprovalFlowEditor'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'https://localhost:7080'
+axios.defaults.baseURL = ''
 
-const rpcHistory = document.querySelector('#approvalFlow');
+const approvalFlow = document.querySelector('#approvalFlow');
 
 const queryClient = new QueryClient({})
 
-approvalFlow && ReactDOM.createRoot(rpcHistory).render(
+approvalFlow && ReactDOM.createRoot(approvalFlow).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient} contextSharing={true}>
       <ApprovalFlowEditor />

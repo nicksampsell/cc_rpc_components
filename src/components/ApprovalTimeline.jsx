@@ -104,10 +104,10 @@ export const ApprovalTimeline = ({approvalFlow, rpcStatus, rpcInfo, isExpanded, 
 					align="top"
 					value={approvalEvents}
 					marker={(item) => ItemMarkerCollapsedDisplay(item, rpcInfo)}
-					className="flex flex-inline"
+					className="flex"
 					pt={{
 						root: { className: clsx(calculateTimelineMinWidth(approvalEvents.length)) },
-						event: { className: clsx(timelineItemWidth(approvalEvents.length)) },
+						event: { className: clsx(timelineItemWidth(approvalEvents.length), 'grow') },
 						connector: { className: '!bg-black basis-full'},
 						separator: { className: 'w-full flex flex-row items-center' },
 						content: { className: '' },
@@ -136,10 +136,10 @@ export const ApprovalTimeline = ({approvalFlow, rpcStatus, rpcInfo, isExpanded, 
 							content={(item) => TimelineItem(item, rpcInfo)}
 							opposite={(item) => TimelineStatusText(item)}
 							marker={(item) => ItemMarker(item.status)}
-							className="flex flex-inline"
+							className="grid grid-flow-col-dense auto-cols-fr"
 							pt={{
 								root: { className: clsx(calculateTimelineMinWidth(approvalEvents.length)) },
-								event: { className: clsx(timelineItemWidth(approvalEvents.length)) },
+								event: { className: clsx(timelineItemWidth(approvalEvents.length),'grow') },
 								connector: { className: '!bg-black basis-full'},
 								separator: { className: 'w-full flex flex-row items-center' },
 								content: { className: '' },
