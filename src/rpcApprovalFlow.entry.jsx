@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form'
 import { ApprovalFlowEditor } from './components/ApprovalFlowEditor'
 import axios from 'axios'
 
-axios.defaults.baseURL = ''
+axios.defaults.baseURL = 'https://localhost:7080'
 
 const approvalFlow = document.querySelector('#approvalFlow');
 

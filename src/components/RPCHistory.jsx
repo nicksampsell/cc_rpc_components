@@ -37,9 +37,10 @@ export function RPCHistory({employeeId, mini})
         if(typeof(rpcStatuses) != "undefined")
         {
             let localRowStatus = []
-            rpcStatuses.Items.map(item => localRowStatus.push(
+
+            rpcStatuses?.map(item => localRowStatus.push(
                 ({
-                    rowId: item.id,
+                    rowId: item.rpcId,
                     expanded: false
                 }))
             )
@@ -62,6 +63,27 @@ export function RPCHistory({employeeId, mini})
 
     }
 
+    const showStatus = (code) => {
+
+        switch(code)
+        {
+            case 0:
+                return 'Draft'
+            case 1:
+                return 'New'
+            case 2: 
+                return 'Submitted'
+            case 3:
+                return 'Processing'
+            case 4:
+                return 'Requires Revision'
+            case 5: 
+                return 'Finalized'
+            default:
+                return 'Unknown Status'
+        }
+    }
+
 	return (
 		<div className="shadow-sm">
 			<table className="w-full border text-left table-fixed">
@@ -74,27 +96,27 @@ export function RPCHistory({employeeId, mini})
                     </tr>
                 </thead>
                 <tbody>
-                	{ rpcStatuses && 
-                        rpcStatuses.Items.length > 0 ? 
-                            rpcStatuses.Items.map(item => (
+                	{ !!rpcStatuses && 
+                        rpcStatuses?.length > 0 ? 
+                            rpcStatuses?.map(item => (
                         		<tr 
                                     className="odd:bg-white even:bg-slate-100" 
-                                    key={item.id}
+                                    key={item.rpcId}
                                     >
                         			<td className="p-3 text-gray-800 text-sm">
                                     <a href={'/rpc/'+item.id} className="hover:text-blue-900">
-                                        <strong className="text-semibold">{item.categoryTitle}</strong>:<br />{item.title}
+                                        <strong className="text-semibold">{item?.actionCategory}</strong>:<br />{item?.actionTitle}
                                     </a>
                                     </td>
                         			<td className="w-[60%]">
                                         <ApprovalTimeline 
-                                            approvalFlow={rpcStatuses.ApprovalFlow} 
+                                            approvalFlow={item?.approvalFlow} 
                                             rpcStatus={item.approvals} 
                                             rpcInfo={item}
                                             mini={mini}
                                             isExpanded={rowStatus?.find(x => x.rowId == item.id)?.expanded} />
                                     </td>
-                        			<td className="text-gray-800 text-sm">Status: <strong className="text-semibold">{item.status}</strong><br />
+                        			<td className="text-gray-800 text-sm">Status: <strong className="text-semibold">{showStatus(item.rpcStatus)}</strong><br />
                         			<small className="text-xs text-gray-700">{item.updated}</small></td>
                                     {!mini ? (<td className="text-end p-2">
                                         {(rowStatus?.length > 0) && (

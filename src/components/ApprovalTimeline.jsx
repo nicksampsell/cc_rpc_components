@@ -10,25 +10,63 @@ export const ApprovalTimeline = ({approvalFlow, rpcStatus, rpcInfo, isExpanded, 
 	
 	const [approvalEvents, setApprovalEvents] = useState([])
 
-
-
 	useEffect(() => {
-		setApprovalEvents(approvalFlow.map(item => ({
-			id: item.id,
-			approvalId: rpcStatus?.find(x => x.approvalFlowId == item.id)?.approvalId,
-			uuid: generateUUID(item.id, rpcStatus?.find(x => x.approvalFlowId == item.id)?.approvalId),
-			name: `${item.firstName} ${item.lastName}`,
-			jobTitle: item.title,
-			message: capitalize(determineStatus(rpcStatus.find(x => x.approvalFlowId == item.id))),
-			status: determineStatus(rpcStatus.find(x => x.approvalFlowId == item.id)),
-			userId: item.userId,
-			isCivilServiceCommission: item.isCivilServiceCommission,
-			isDepartmentHead: item.isDepartmentHead
+
+
+		let allEvents = approvalFlow?.flowItems?.map(item => ({
+			id: item.flowItemId,
+			approvalId: item.approvalId,
+			uuid: generateUUID(item.flowItemId, (item.standInEnabled ? item.standIn : item.userId)),
+			name: item.standInEnabled ? item.standInFullName : item.userFullName,
+			jobTitle: item.standInEnabled ? item.standInPosition : item.userPosition,
+			message: capitalize(determineStatus(item)),
+			status: determineStatus(item),
+			userId: item.standInEnabled ? item.standIn : item.UserId,
+			isCivilServiceCommission: false,
+			isDepartmentHead: false
 			})
-		))
+		);
+
+		if(approvalFlow.requiresCivilServiceCommission && !approvalEvents.includes(x => x.id == 'civil_service'))
+		{
+			allEvents = [...allEvents, {
+				id: rpcInfo?.approvalFlow?.id,
+				approvalId: rpcInfo?.miscApprovals?.find(x => x.
+isCivilServiceCommission == true)?.id,
+				uuid: generateUUID(rpcInfo.id, 'civilService'),
+				name: rpcInfo?.departmentHead?.fullName,
+				jobTitle: 'Civil Service Commission',
+				message: capitalize(determineStatus(rpcInfo?.miscApprovals?.find(x => x.
+isCivilServiceCommission == true))),
+				status: determineStatus(rpcInfo?.miscApprovals?.find(x => x.
+isCivilServiceCommission == true)),
+				userId: null,
+				isCivilServiceCommission: true,
+				isDepartmentHead: false
+			}]
+		}
+
+		if(approvalFlow.requiresDeptHead && !approvalEvents.includes(x => x.id == 'dept_head'))
+		{
+			allEvents = [{
+				id: rpcInfo?.approvalFlow?.id,
+				approvalId: rpcInfo?.miscApprovals?.find(x => x.isDeptHead == true)?.id,
+				uuid: generateUUID(rpcInfo.id, rpcInfo?.departmentHead?.userId),
+				name: rpcInfo?.departmentHead?.fullName,
+				jobTitle: rpcInfo?.departmentHead?.positionTitle,
+				message: capitalize(determineStatus(rpcInfo?.miscApprovals?.find(x => x.isDeptHead == true))),
+				status: determineStatus(rpcInfo?.miscApprovals?.find(x => x.isDeptHead == true)),
+				userId: rpcInfo?.departmentHead?.userId,
+				isCivilServiceCommission: false,
+				isDepartmentHead: true
+			}, ...allEvents]
+		}	
+
+		setApprovalEvents([...allEvents])
+
+		}, [approvalFlow])
 
 
-	}, [approvalFlow])
 
 	const determineStatus = (item) => {
 
@@ -45,6 +83,8 @@ export const ApprovalTimeline = ({approvalFlow, rpcStatus, rpcInfo, isExpanded, 
 		May not be the best way of doing it, but it solves the problem
 		*/
 
+		//console.log(item)
+
 		if(item == undefined)
 		{
 			return
@@ -53,24 +93,18 @@ export const ApprovalTimeline = ({approvalFlow, rpcStatus, rpcInfo, isExpanded, 
 		{
 			return 'success'
 		}
-		else
+	
+		if(item.requiresModification)
 		{
-			if(item.isWaiting)
-			{
-				return 'waiting'
-			}
-			else
-			{
-				if(item.requiresModification)
-				{
-					return 'error'
-				}
-				else
-				{
-					return 'active'
-				}
-			}
+			return 'error';
 		}
+		if(item.isCreated)
+		{
+			return 'active';
+		}
+		
+		return 'warning';
+				
 	}
 
 	const timelineItemWidth = (numItems) => {
@@ -211,16 +245,16 @@ const ItemMarkerCollapsedDisplay = (item, rpcInfo) => {
 				) : 
 					item.isDepartmentHead ? (
 						<>
-						<strong className="font-semibold">{rpcInfo.departmentHead}</strong>
-						{rpcInfo.departmentHeadTitle && (
-								<p className="italic whitespace-normal">({rpcInfo.departmentHeadTitle})</p>
+						<strong className="font-semibold">{rpcInfo?.departmentHead?.fullName}</strong>
+						{rpcInfo?.departmentHead?.positionTitle && (
+								<p className="italic whitespace-normal">({rpcInfo?.departmentHead?.positionTitle})</p>
 							)}
 						</>
 					) : (
 					<>
-					<strong className="font-semibold">{item.name}</strong>
-						{item.jobTitle && (
-							<p className="italic whitespace-normal">({item.jobTitle})</p>
+					<strong className="font-semibold">{item?.name}</strong>
+						{item?.jobTitle && (
+							<p className="italic whitespace-normal">({item?.jobTitle})</p>
 						)}
 					</>
 				)}
